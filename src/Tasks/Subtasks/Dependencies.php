@@ -1,5 +1,7 @@
 <?php
-namespace SadnessDeployer\Tasks;
+namespace SadnessDeployer\Tasks\Subtasks;
+
+use SadnessDeployer\Tasks\AbstractTask;
 
 class Dependencies extends AbstractTask
 {

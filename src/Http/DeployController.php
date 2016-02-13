@@ -38,6 +38,7 @@ class DeployController extends Controller
         $task = $this->getTask($task);
         $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
         $commands = $this->deployer->$method($task);
+        dump($commands); exit;
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
@@ -81,6 +82,10 @@ class DeployController extends Controller
     private function getTask($task)
     {
         $task = sprintf('SadnessDeployer\Tasks\%s', ucfirst($task));
+        if (!class_exists($task)) {
+            $task = sprintf('SadnessDeployer\Tasks\Subtasks\%s', ucfirst($task));
+        }
+
         if (!class_exists($task)) {
             throw new InvalidArgumentException('Invalid task '.$task);
         }

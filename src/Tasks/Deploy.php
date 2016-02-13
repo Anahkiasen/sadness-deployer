@@ -2,6 +2,14 @@
 
 namespace SadnessDeployer\Tasks;
 
+use SadnessDeployer\Tasks\Subtasks\Annotations;
+use SadnessDeployer\Tasks\Subtasks\Clear;
+use SadnessDeployer\Tasks\Subtasks\Database;
+use SadnessDeployer\Tasks\Subtasks\Dependencies;
+use SadnessDeployer\Tasks\Subtasks\Environment;
+use SadnessDeployer\Tasks\Subtasks\Optimize;
+use SadnessDeployer\Tasks\Subtasks\Repository;
+
 class Deploy extends AbstractTask
 {
     /**
@@ -9,14 +17,16 @@ class Deploy extends AbstractTask
      */
     public function __construct()
     {
-        $this->run('artisan down');
-        $this->repository();
-        $this->environment();
-        $this->run(new Dependencies());
-        $this->clear();
-        $this->annotations();
-        $this->database();
-        $this->run('artisan up');
-        $this->optimize();
+        $this->run([
+            'artisan down',
+            Repository::class,
+            Environment::class,
+            Dependencies::class,
+            Clear::class,
+            Annotations::class,
+            Database::class,
+            'artisan up',
+            Optimize::class,
+        ]);
     }
 }

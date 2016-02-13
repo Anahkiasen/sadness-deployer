@@ -38,24 +38,7 @@ abstract class AbstractTask
      */
     protected function run($commands)
     {
-        // Unwrap tasks
-        if ($commands instanceof AbstractTask) {
-            $commands = $commands->getCommands();
-        }
-
-        $commands = (array) $commands;
-        foreach ($commands as &$command) {
-            if ($command instanceof Command) {
-                continue;
-            }
-
-            $command = new Command([
-                'command' => $command,
-                'status' => null,
-                'output' => null,
-                'done' => false,
-            ]);
-        }
+        $commands = $this->processCommands($commands);
 
         $this->commands = array_merge($this->commands, $commands);
     }
@@ -71,90 +54,41 @@ abstract class AbstractTask
     }
 
     //////////////////////////////////////////////////////////////////////
-    /////////////////////////////// TASKS ////////////////////////////////
+    ////////////////////////////// HELPERS ///////////////////////////////
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * Update repository.
+     * @param string|array|AbstractTask $commands
+     *
+     * @return Command[]
      */
-    protected function repository()
+    protected function processCommands($commands)
     {
-        $this->run([
-            'git checkout '.$this->option('scm.branch'),
-            'git reset --hard',
-            'git clean -df',
-            'git pull',
-        ]);
-    }
-
-    /**
-     * Copy environment file.
-     */
-    protected function environment()
-    {
-        $environment = env('APP_ENV', 'production');
-        $file = '.env.'.$environment;
-        if (!file_exists(base_path($file))) {
-            return;
+        if (!is_array($commands)) {
+            $commands = [$commands];
         }
 
-        $this->run([
-            'cp '.$file.' .env',
-        ]);
-    }
+        $queue = [];
+        foreach ($commands as $command) {
+            // Check if it's a class or a bash
+            // command, create instance if so
+            if (is_string($command) && class_exists($command)) {
+                $command = new $command;
+                if ($command instanceof AbstractTask) {
+                    $queue = array_merge($queue, $command->getCommands());
+                    continue;
+                }
+            }
 
-    /**
-     * Update dependencies.
-     */
-    protected function dependencies()
-    {
-    }
+            // Wrap if not a Command instance
+            if (!$command instanceof Command) {
+                $command = new Command($command);
+            }
 
-    /**
-     * Clear various caches.
-     */
-    protected function clear()
-    {
-        $this->run([
-            'artisan clear-compiled',
-            'artisan cache:clear',
-            'artisan config:clear',
-            'artisan route:clear',
-            'artisan twig:clean',
-        ]);
-    }
+            dump($command); exit;
+            $queue[] = $command;
+        }
 
-    /**
-     * Scan annotations.
-     */
-    protected function annotations()
-    {
-        $this->run([
-            'artisan route:scan',
-            'artisan model:scan',
-        ]);
-    }
-
-    /**
-     * Optimize the application.
-     */
-    protected function optimize()
-    {
-        $this->run([
-            'artisan config:cache',
-            'artisan route:cache',
-            'artisan optimize',
-        ]);
-    }
-
-    /**
-     * Update the database.
-     */
-    protected function database()
-    {
-        $this->run([
-            'artisan migrate --force',
-            'artisan db:backup',
-        ]);
+        return $queue;
     }
 }

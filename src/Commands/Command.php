@@ -9,8 +9,8 @@ use Symfony\Component\Process\PhpExecutableFinder;
  * @property string $command
  * @property string $sanitized
  * @property string $output
- * @property int $status
- * @property bool $done
+ * @property int    $status
+ * @property bool   $done
  */
 class Command extends Fluent
 {
@@ -19,6 +19,16 @@ class Command extends Fluent
      */
     public function __construct($attributes)
     {
+        // Default attributes
+        if (is_string($attributes)) {
+            $attributes = [
+                'command' => $attributes,
+                'status'  => null,
+                'output'  => null,
+                'done'    => false,
+            ];
+        }
+
         parent::__construct($attributes);
 
         $this->sanitized = $this->sanitizeCommand($this->command);
