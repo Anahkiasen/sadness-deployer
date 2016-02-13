@@ -30,35 +30,28 @@ class DeployController extends Controller
      */
     public function index(Request $request, $task = 'deploy')
     {
+        $this->deployer->setPretend(true);
+
         return view('sadness-deployer::console', [
-            'tasks' => $this->runTask($request, $task),
+            'tasks' => $this->deployer->$task(),
         ]);
-    }
-
-    /**
-     * @param string $task
-     * @param string $command
-     *
-     * @return array
-     */
-    public function run(Request $request, $task, $command)
-    {
-        $tasks = $this->runTask($request, $task);
-        $command = $tasks[$command];
-
-        return $this->deployer->run($command->sanitized);
     }
 
     /**
      * @param Request $request
      * @param string  $task
+     * @param string  $command
      *
-     * @return View
+     * @return array
      */
-    protected function runTask(Request $request, $task)
+    public function run(Request $request, $task, $command)
     {
         $this->deployer->setPretend($request->get('pretend'));
 
-        return $this->deployer->$task();
+        // Retrieve the command in particular
+        $tasks   = $this->deployer->$task();
+        $command = $tasks[$command];
+
+        return $this->deployer->run($command->sanitized);
     }
 }
