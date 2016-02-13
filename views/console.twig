@@ -68,6 +68,7 @@
         var app = new Vue({
             el:      'main',
             data:    {
+                hash: {{ hash|json_encode|raw }},
                 taskKey: 0,
                 tasks: {{ tasks|json_encode|raw }}
             },
@@ -75,13 +76,13 @@
                 this.runTask();
             },
             filters: {
-              nl2br: function (value) {
-                  return ('' + value).replace("\n", '<br />');
-              },
+                nl2br: function (value) {
+                    return ('' + value).replace("\n", '<br />');
+                },
             },
             methods: {
                 runTask() {
-                    var url = '/deploy/run/deploy/' + this.taskKey + window.location.search;
+                    var url = '/deploy/run/' + this.hash + '/' + this.taskKey + window.location.search;
                     this.$http({url: url}).then(function (response) {
                         var task = response.data;
                         task.done = true;

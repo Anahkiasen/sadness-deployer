@@ -117,6 +117,7 @@ abstract class AbstractTask
     protected function clear()
     {
         $this->run([
+            'artisan clear-compiled',
             'artisan cache:clear',
             'artisan config:clear',
             'artisan route:clear',

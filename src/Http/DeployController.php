@@ -5,9 +5,10 @@ namespace SadnessDeployer\Http;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use SadnessDeployer\BatchManager;
 use SadnessDeployer\Tasks\AbstractTask;
-use SadnessDeployer\Tasks\Deploy;
 use SadnessDeployer\TasksRunner;
 
 class DeployController extends Controller
@@ -26,30 +27,38 @@ class DeployController extends Controller
     }
 
     /**
-     * @param string $task
+     * @param BatchManager $batches
+     * @param string       $task
      *
      * @return View
      */
-    public function index($task = 'deploy')
+    public function index(BatchManager $batches, $task = 'deploy')
     {
         $task = $this->getTask($task);
+        $commands = $this->deployer->getCommandsFrom(new $task());
+
+        // Store commands for retrieval
+        $hash = $batches->set($commands);
 
         return view('sadness-deployer::console', [
-            'tasks' => $this->deployer->getCommandsFrom(new $task()),
+            'tasks' => $commands,
+            'hash' => $hash,
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param string  $task
-     * @param string  $command
+     * @param BatchManager $batches
+     * @param Request      $request
+     * @param string       $hash
+     * @param string       $command
      *
      * @return array
      */
-    public function run(Request $request, $task, $command)
+    public function run(BatchManager $batches, Request $request, $hash, $command)
     {
-        $task = $this->getTask($task);
-        $command = $this->deployer->getCommandFrom($task, $command);
+        // Retrieve command
+        $commands = $batches->get($hash);
+        $command = Arr::get($commands, $command);
 
         // Set pretend mode
         $pretend = $request->get('pretend');
