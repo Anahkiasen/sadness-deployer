@@ -45,6 +45,10 @@ abstract class AbstractTask
 
         $commands = (array) $commands;
         foreach ($commands as &$command) {
+            if ($command instanceof Command) {
+                continue;
+            }
+            
             $command = new Command([
                 'command' => $command,
                 'status' => null,
