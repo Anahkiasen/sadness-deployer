@@ -12,9 +12,9 @@ class BatchManager
     protected $folder;
 
     /**
-     * @param string $folder
+     * BatchManager constructor.
      */
-    public function __construct($folder)
+    public function __construct()
     {
         $this->folder = __DIR__.'/../batches';
     }
