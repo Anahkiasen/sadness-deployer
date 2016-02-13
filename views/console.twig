@@ -56,8 +56,8 @@
                     $ {{ task.command }}
                     <small v-if="task.command != task.sanitized">{{ task.sanitized }}</small>
                 </p>
-                <p class="task__output success" v-if="task.status">{{ task.output }}</p>
-                <p class="task__output error" v-if="!task.status">{{ task.output }}</p>
+                <p class="task__output success" v-if="task.status">{{{ task.output|nl2br }}}</p>
+                <p class="task__output error" v-if="!task.status">{{{ task.output|nl2br }}}</p>
             </div>
         </main>
     {% endraw %}
@@ -73,6 +73,11 @@
             },
             created: function () {
                 this.runTask();
+            },
+            filters: {
+              nl2br: function (value) {
+                  return ('' + value).replace("\n", '<br />');
+              },
             },
             methods: {
                 runTask() {
