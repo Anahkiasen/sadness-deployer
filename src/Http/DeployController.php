@@ -37,7 +37,7 @@ class DeployController extends Controller
     {
         $task = $this->getTask($task);
         $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
-        $commands = $this->deployer->$method(new $task());
+        $commands = $this->deployer->$method($task);
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
