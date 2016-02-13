@@ -3,6 +3,9 @@
 namespace SadnessDeployer;
 
 use Closure;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class Deployer
 {
@@ -12,9 +15,9 @@ class Deployer
     protected $runner;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $branch;
+    protected $configuration;
 
     /**
      * @param CommandsRunner $runner
@@ -26,11 +29,21 @@ class Deployer
     }
 
     /**
-     * @param string $branch
+     * @param array $configuration
      */
-    public function setBranch($branch)
+    public function setConfiguration(array $configuration)
     {
-        $this->branch = $branch;
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @param string $option
+     *
+     * @return mixed
+     */
+    public function option($option)
+    {
+        return Arr::get($this->configuration, $option);
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -48,6 +61,19 @@ class Deployer
     //////////////////////////////////////////////////////////////////////
     /////////////////////////////// DEPLOY ///////////////////////////////
     //////////////////////////////////////////////////////////////////////
+
+    /**
+     * Setup the application and Deployer
+     */
+    public function setup()
+    {
+        $this->run([
+            'git init',
+            'git remote add origin '.$this->option('scm.url'),
+        ]);
+
+        $this->deploy();
+    }
 
     /**
      * Deploy the application.
@@ -93,7 +119,7 @@ class Deployer
     protected function repository()
     {
         $this->run([
-            'git checkout '.$this->branch,
+            'git checkout '.$this->option('scm.branch'),
             'git reset --hard',
             'git clean -df',
             'git pull',

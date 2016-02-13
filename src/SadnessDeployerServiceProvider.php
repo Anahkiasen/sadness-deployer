@@ -20,10 +20,8 @@ class SadnessDeployerServiceProvider extends ServiceProvider
         ]);
 
         $this->app->bind(Deployer::class, function ($app) {
-            $branch   = $app['config']->get('deploy.scm.branch', 'master');
-
             $deployer = new Deployer(new CommandsRunner());
-            $deployer->setBranch($branch);
+            $deployer->setConfiguration($app['config']->get('deploy'));
 
             return $deployer;
         });
