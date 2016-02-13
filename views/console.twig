@@ -78,8 +78,7 @@
             filters: {
                 nl2br: function (value) {
                     return ('' + value)
-                        .replace("\r", '<br />')
-                        .replace("\n", '<br />');
+                        .replace(/\n/g, '<br />');
                 },
             },
             methods: {
