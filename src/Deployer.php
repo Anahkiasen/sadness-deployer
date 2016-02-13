@@ -104,10 +104,12 @@ class Deployer
 
     /**
      * @param string|array $commands
+     *
+     * @return array
      */
     public function run($commands)
     {
-        $this->runner->runCommands((array) $commands);
+        return $this->runner->runCommands((array) $commands);
     }
 
     //////////////////////////////////////////////////////////////////////

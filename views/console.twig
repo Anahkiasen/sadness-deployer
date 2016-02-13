@@ -7,7 +7,7 @@
         body {
             background: #263238;
             padding: 2rem;
-            color: #eceff1;
+            color: #ECEFF1;
             font-family: Monaco, monospace;
             font-size: 12px;
         }
@@ -32,27 +32,46 @@
         }
 
         .output.success {
-            color: #69f0ae;
+            color: #69F0AE;
         }
 
         .output.error {
-            color: #ff5252;
+            color: #FF5252;
         }
     </style>
 </head>
 <body>
-    {% for command in output %}
-        <p class="command">
-            $ {{ command.command }}
-            {% if command.command != command.sanitized %}
-                <small>{{ command.sanitized }}</small>
-            {% endif %}
-        </p>
-        {% if command.status %}
-            <p class="output success">{{ command.output|nl2br }}</p>
-        {% else %}
-            <p class="output error">{{ command.output|nl2br }}</p>
-        {% endif %}
-    {% endfor %}
+    {% raw %}
+        <main>
+            <div v-for="task in tasks" v-if="task.status">
+                <p class="command">
+                    $ {{ item.command }}
+                    <small v-if="item.command != item.sanitized">{{ item.sanitized }}</small>
+                </p>
+                <p class="output success" v-if="item.status">{{ item.output }}</p>
+                <p class="output error" v-if="!item.status">{{ item.output }}</p>
+            </div>
+        </main>
+    {% endraw %}
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+    <script>
+        var app = new Vue({
+            el:      'main',
+            data:    {
+                tasks: {{ tasks|json_encode|raw }}
+            },
+            created: function () {
+                var that = this;
+                this.tasks.forEach(function (task, key) {
+                    var url = '/deploy/run/deploy/' +key;
+                    that.$http({url: url}).then(function (response) {
+                        that.tasks[key] = response[0];
+                    });
+                });
+            },
+        });
+    </script>
 </body>
 </html>

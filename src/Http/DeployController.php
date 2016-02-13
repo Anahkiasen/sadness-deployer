@@ -24,22 +24,29 @@ class DeployController extends Controller
 
     /**
      * @param Request $request
+     * @param string  $task
      *
      * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request, $task = 'deploy')
     {
-        return $this->runTask($request, 'deploy');
+        return view('sadness-deployer::console', [
+            'tasks' => $this->runTask($request, $task),
+        ]);
     }
 
     /**
-     * @param Request $request
+     * @param string $task
+     * @param string $command
      *
-     * @return View
+     * @return array
      */
-    public function setup(Request $request)
+    public function run(Request $request, $task, $command)
     {
-        return $this->runTask($request, 'setup');
+        $tasks = $this->runTask($request, $task);
+        $command = $tasks[$command];
+
+        return $this->deployer->run($command->sanitized);
     }
 
     /**
@@ -52,8 +59,6 @@ class DeployController extends Controller
     {
         $this->deployer->setPretend($request->get('pretend'));
 
-        return view('sadness-deployer::console', [
-            'output' => $this->deployer->$task(),
-        ]);
+        return $this->deployer->$task();
     }
 }

@@ -65,14 +65,16 @@ class CommandsRunner
      */
     public function runCommands(array $commands)
     {
+        $processes = [];
         foreach ($commands as $command) {
             $process = $this->run($command);
+            $processes[] = $process;
             if (!$process->status && !$this->pretend) {
                 break;
             }
         }
 
-        return $this->output;
+        return $processes;
     }
 
     /**
