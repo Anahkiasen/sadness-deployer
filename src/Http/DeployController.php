@@ -28,14 +28,16 @@ class DeployController extends Controller
 
     /**
      * @param BatchManager $batches
+     * @param Request      $request
      * @param string       $task
      *
      * @return View
      */
-    public function index(BatchManager $batches, $task = 'deploy')
+    public function index(BatchManager $batches, Request $request, $task = 'deploy')
     {
         $task = $this->getTask($task);
-        $commands = $this->deployer->getCommandsFrom(new $task());
+        $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
+        $commands = $this->deployer->$method(new $task());
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
