@@ -52,11 +52,10 @@ class TasksRunner
 
     /**
      * @param AbstractTask $task
-     * @param int|null     $command
      *
      * @return Command[]
      */
-    public function getCommandsFor(AbstractTask $task, $command = null)
+    public function getCommandsFrom(AbstractTask $task)
     {
         $task->setConfiguration($this->configuration);
 
@@ -69,20 +68,19 @@ class TasksRunner
      *
      * @return Command
      */
-    public function getCommandFor(AbstractTask $task, $command)
+    public function getCommandFrom(AbstractTask $task, $command)
     {
-        return Arr::get($this->getCommandsFor($task), $command);
+        return Arr::get($this->getCommandsFrom($task), $command);
     }
 
     /**
      * @param AbstractTask $task
-     * @param int|null     $command
      *
-     * @return array|mixed
+     * @return Command[]
      */
-    public function runTask(AbstractTask $task, $command = null)
+    public function runTask(AbstractTask $task)
     {
-        $commands = $this->getCommandsFor($task, $command);
+        $commands = $this->getCommandsFrom($task);
 
         return $this->runCommands($commands);
     }

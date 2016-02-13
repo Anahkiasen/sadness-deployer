@@ -35,7 +35,7 @@ class DeployController extends Controller
         $task = $this->getTask($task);
 
         return view('sadness-deployer::console', [
-            'tasks' => $this->deployer->getCommandsFor(new $task()),
+            'tasks' => $this->deployer->getCommandsFrom(new $task()),
         ]);
     }
 
@@ -49,7 +49,7 @@ class DeployController extends Controller
     public function run(Request $request, $task, $command)
     {
         $task = $this->getTask($task);
-        $command = $this->deployer->getCommandFor($task, $command);
+        $command = $this->deployer->getCommandFrom($task, $command);
 
         // Set pretend mode
         $pretend = $request->get('pretend');
