@@ -143,7 +143,6 @@ abstract class AbstractTask
         $this->run([
             'artisan config:cache',
             'artisan route:cache',
-            'artisan config:cache',
             'artisan optimize',
         ]);
     }
