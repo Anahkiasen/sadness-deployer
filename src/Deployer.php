@@ -70,6 +70,8 @@ class Deployer
         $this->run([
             'git init',
             'git remote add origin '.$this->option('scm.url'),
+            'git fetch -pt',
+            'git clean -df',
         ]);
 
         return $this->deploy();
@@ -144,13 +146,14 @@ class Deployer
      */
     protected function dependencies()
     {
+        $flags = env('APP_DEBUG') ? '--no-dev' : '';
         if (!file_exists($this->runner->getBasePath().'/composer.phar')) {
             $this->getComposer();
         }
 
         $this->run([
             'composer self-update',
-            'composer update --no-scripts --no-dev',
+            'composer update --no-scripts '.$flags,
         ]);
     }
 
