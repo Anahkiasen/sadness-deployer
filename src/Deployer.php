@@ -75,7 +75,7 @@ class Deployer
      *
      * @param string $from
      */
-    protected function environment($from = 'staging')
+    protected function environment($from = 'production')
     {
         $this->runner->runCommands([
             'rm .env',
