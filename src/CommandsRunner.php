@@ -1,4 +1,5 @@
 <?php
+
 namespace SadnessDeployer;
 
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -70,7 +71,7 @@ class CommandsRunner
     {
         // Build process
         $sanitized = $this->sanitizeCommand($command);
-        $process   = new Process($sanitized, $this->basePath);
+        $process = new Process($sanitized, $this->basePath);
 
         // Run process
         $output = '';
@@ -90,10 +91,10 @@ class CommandsRunner
 
         // Register command
         $process = (object) [
-            'command'   => $command,
+            'command' => $command,
             'sanitized' => $process->getCommandLine(),
-            'output'    => $output,
-            'status'    => $status,
+            'output' => $output,
+            'status' => $status,
         ];
 
         $this->output[] = $process;

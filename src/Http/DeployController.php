@@ -1,4 +1,5 @@
 <?php
+
 namespace SadnessDeployer\Http;
 
 use Illuminate\Contracts\View\View;
@@ -22,6 +23,7 @@ class DeployController extends Controller
 
     /**
      * @Get("deploy", as="deploy.deploy")
+     *
      * @return View
      */
     public function index()

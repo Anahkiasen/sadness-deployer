@@ -1,4 +1,5 @@
 <?php
+
 namespace SadnessDeployer;
 
 use Closure;
@@ -20,7 +21,7 @@ class Deployer
     }
 
     /**
-     * Deploy the application
+     * Deploy the application.
      *
      * @param Closure|null $callback
      *
@@ -58,7 +59,7 @@ class Deployer
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * Update repository
+     * Update repository.
      */
     protected function repository()
     {
@@ -70,7 +71,7 @@ class Deployer
     }
 
     /**
-     * Copy environment file
+     * Copy environment file.
      *
      * @param string $from
      */
@@ -78,12 +79,12 @@ class Deployer
     {
         $this->runner->runCommands([
             'rm .env',
-            'cp .env.' .$from. ' .env',
+            'cp .env.'.$from.' .env',
         ]);
     }
 
     /**
-     * Update dependencies
+     * Update dependencies.
      */
     protected function dependencies()
     {
@@ -98,7 +99,7 @@ class Deployer
     }
 
     /**
-     * Clear various caches
+     * Clear various caches.
      */
     protected function clear()
     {
@@ -111,7 +112,7 @@ class Deployer
     }
 
     /**
-     * Scan annotations
+     * Scan annotations.
      */
     protected function annotations()
     {
@@ -122,7 +123,7 @@ class Deployer
     }
 
     /**
-     * Optimize the application
+     * Optimize the application.
      */
     protected function optimize()
     {
@@ -135,7 +136,7 @@ class Deployer
     }
 
     /**
-     * Update the database
+     * Update the database.
      */
     protected function database()
     {
@@ -150,7 +151,7 @@ class Deployer
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * Setup composer if necessary
+     * Setup composer if necessary.
      */
     private function getComposer()
     {
