@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sadness Deployer</title>
+    <title>Sadness TasksRunner</title>
     <style>
         body {
             background: #263238;
@@ -78,7 +78,7 @@
                 runTask() {
                     var url = '/deploy/run/deploy/' + this.taskKey + window.location.search;
                     this.$http({url: url}).then(function (response) {
-                        var task = response.data[0];
+                        var task = response.data;
                         task.done = true;
 
                         this.tasks.$set(this.taskKey, task);
@@ -86,8 +86,6 @@
                         if (this.taskKey < this.tasks.length) {
                             this.runTask();
                         }
-                    }).error(function (r) {
-                        console.log(r);
                     });
                 },
             },

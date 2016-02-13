@@ -4,6 +4,7 @@ namespace SadnessDeployer;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
+use SadnessDeployer\Commands\CommandsRunner;
 use SadnessDeployer\Http\DeployController;
 use SadnessDeployer\Http\WhitelistMiddleware;
 
@@ -19,8 +20,8 @@ class SadnessDeployerServiceProvider extends ServiceProvider
             __DIR__.'/../config/deploy.php' => config_path('deploy.php'),
         ]);
 
-        $this->app->bind(Deployer::class, function ($app) {
-            $deployer = new Deployer(new CommandsRunner());
+        $this->app->bind(TasksRunner::class, function ($app) {
+            $deployer = new TasksRunner(new CommandsRunner());
             $deployer->setConfiguration($app['config']->get('deploy'));
 
             return $deployer;

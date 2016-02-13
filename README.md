@@ -1,4 +1,4 @@
-# Sadness Deployer
+# Sadness TasksRunner
 
 This is a pile of trashcode put together to deploy Laravel projects on shared hosting.
 

@@ -1,37 +1,54 @@
 <?php
 
-namespace SadnessDeployer;
+namespace SadnessDeployer\Tasks;
 
-use Closure;
 use Illuminate\Support\Arr;
+use SadnessDeployer\Commands\Command;
 
-class Deployer
+abstract class AbstractTask
 {
     /**
-     * @var CommandsRunner
+     * @var array
      */
-    protected $runner;
+    protected $commands = [];
 
     /**
      * @var array
      */
-    protected $configuration;
-
-    /**
-     * @param CommandsRunner $runner
-     */
-    public function __construct(CommandsRunner $runner)
-    {
-        $this->runner = $runner;
-        $this->runner->setBasePath(base_path());
-    }
+    protected $configuration = [];
 
     /**
      * @param array $configuration
      */
-    public function setConfiguration(array $configuration)
+    public function setConfiguration($configuration)
     {
         $this->configuration = $configuration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCommands()
+    {
+        return $this->commands;
+    }
+
+    /**
+     * @param string|array $commands
+     */
+    protected function run($commands)
+    {
+        $commands = (array) $commands;
+        foreach ($commands as &$command) {
+            $command = new Command([
+                'command' => $command,
+                'status' => null,
+                'output' => null,
+                'done' => false,
+            ]);
+        }
+
+        $this->commands = array_merge($this->commands, $commands);
     }
 
     /**
@@ -39,77 +56,9 @@ class Deployer
      *
      * @return mixed
      */
-    public function option($option)
+    protected function option($option)
     {
         return Arr::get($this->configuration, $option);
-    }
-
-    //////////////////////////////////////////////////////////////////////
-    ////////////////////////////// OPTIONS ///////////////////////////////
-    //////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param bool $pretend
-     */
-    public function setPretend($pretend)
-    {
-        $this->runner->setPretend($pretend);
-    }
-
-    //////////////////////////////////////////////////////////////////////
-    /////////////////////////////// DEPLOY ///////////////////////////////
-    //////////////////////////////////////////////////////////////////////
-
-    /**
-     * Setup the application and Deployer.
-     */
-    public function setup()
-    {
-        $this->run([
-            'git init',
-            'git remote add origin '.$this->option('scm.url'),
-            'git fetch -pt',
-            'git clean -df',
-            'git checkout '.$this->option('scm.branch'),
-        ]);
-
-        return $this->deploy();
-    }
-
-    /**
-     * Deploy the application.
-     *
-     * @param Closure|null $callback
-     *
-     * @return array
-     */
-    public function deploy(Closure $callback = null)
-    {
-        $callback = $callback ?: function (self $runner) {
-            $runner->run('artisan down');
-            $runner->repository();
-            $runner->environment();
-            $runner->dependencies();
-            $runner->clear();
-            $runner->annotations();
-            $runner->optimize();
-            $runner->database();
-            $runner->run('artisan up');
-        };
-
-        $callback($this);
-
-        return $this->runner->getOutput();
-    }
-
-    /**
-     * @param string|array $commands
-     *
-     * @return array
-     */
-    public function run($commands)
-    {
-        return $this->runner->runCommands((array) $commands);
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -136,7 +85,7 @@ class Deployer
     {
         $environment = env('APP_ENV', 'production');
         $file = '.env.'.$environment;
-        if (!file_exists($this->runner->getBasePath().'/'.$file)) {
+        if (!file_exists(base_path($file))) {
             $file = '.env.example';
         }
 
@@ -152,7 +101,7 @@ class Deployer
     protected function dependencies()
     {
         $flags = env('APP_DEBUG') ? '--no-dev' : '';
-        if (!file_exists($this->runner->getBasePath().'/composer.phar')) {
+        if (!file_exists(base_path('composer.phar'))) {
             $this->getComposer();
         }
 

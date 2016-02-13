@@ -5,19 +5,22 @@ namespace SadnessDeployer\Http;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use SadnessDeployer\Deployer;
+use InvalidArgumentException;
+use SadnessDeployer\Tasks\AbstractTask;
+use SadnessDeployer\Tasks\Deploy;
+use SadnessDeployer\TasksRunner;
 
 class DeployController extends Controller
 {
     /**
-     * @var Deployer
+     * @var TasksRunner
      */
     protected $deployer;
 
     /**
-     * @param Deployer $deployer
+     * @param TasksRunner $deployer
      */
-    public function __construct(Deployer $deployer)
+    public function __construct(TasksRunner $deployer)
     {
         $this->deployer = $deployer;
     }
@@ -29,8 +32,10 @@ class DeployController extends Controller
      */
     public function index($task = 'deploy')
     {
+        $task = $this->getTask($task);
+
         return view('sadness-deployer::console', [
-            'tasks' => $this->getCommands($task),
+            'tasks' => $this->deployer->getCommandsFor(new $task()),
         ]);
     }
 
@@ -43,28 +48,29 @@ class DeployController extends Controller
      */
     public function run(Request $request, $task, $command)
     {
-        // Retrieve the command in particular
-        $commands = $this->getCommands($task);
-        $command  = $commands[$command];
+        $task = $this->getTask($task);
+        $command = $this->deployer->getCommandFor($task, $command);
 
         // Set pretend mode
         $pretend = $request->get('pretend');
         $pretend = is_null($pretend) ? false : $pretend;
         $this->deployer->setPretend($pretend);
 
-        return $this->deployer->run($command->command);
+        return $this->deployer->runCommand($command);
     }
 
     /**
      * @param string $task
      *
-     * @return array
+     * @return AbstractTask
      */
-    protected function getCommands($task)
+    private function getTask($task)
     {
-        $this->deployer->setPretend(true);
-        $tasks = $this->deployer->$task();
+        $task = sprintf('SadnessDeployer\Tasks\%s', ucfirst($task));
+        if (!class_exists($task)) {
+            throw new InvalidArgumentException('Invalid task '.$task);
+        }
 
-        return $tasks;
+        return new $task();
     }
 }
