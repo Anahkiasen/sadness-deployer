@@ -86,7 +86,7 @@ abstract class AbstractTask
         $environment = env('APP_ENV', 'production');
         $file = '.env.'.$environment;
         if (!file_exists(base_path($file))) {
-            $file = '.env.example';
+            return;
         }
 
         $this->run([
