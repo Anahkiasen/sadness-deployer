@@ -34,10 +34,15 @@ abstract class AbstractTask
     }
 
     /**
-     * @param string|array $commands
+     * @param string|array|AbstractTask $commands
      */
     protected function run($commands)
     {
+        // Unwrap tasks
+        if ($commands instanceof AbstractTask) {
+            $commands = $commands->getCommands();
+        }
+
         $commands = (array) $commands;
         foreach ($commands as &$command) {
             $command = new Command([
@@ -99,15 +104,6 @@ abstract class AbstractTask
      */
     protected function dependencies()
     {
-        $flags = env('APP_DEBUG') ? '--no-dev' : '';
-        if (!file_exists(base_path('composer.phar'))) {
-            $this->getComposer();
-        }
-
-        $this->run([
-            'composer self-update',
-            'composer install --no-interaction --no-scripts '.$flags,
-        ]);
     }
 
     /**
@@ -155,22 +151,6 @@ abstract class AbstractTask
         $this->run([
             'artisan migrate --force',
             'artisan db:backup',
-        ]);
-    }
-
-    //////////////////////////////////////////////////////////////////////
-    ////////////////////////////// HELPERS ///////////////////////////////
-    //////////////////////////////////////////////////////////////////////
-
-    /**
-     * Setup composer if necessary.
-     */
-    private function getComposer()
-    {
-        $this->run([
-            'php -r "readfile(\'https://getcomposer.org/installer\');" > composer-setup.php',
-            'php composer-setup.php',
-            'php -r "unlink(\'composer-setup.php\');"',
         ]);
     }
 }

@@ -12,7 +12,7 @@ class Deploy extends AbstractTask
         $this->run('artisan down');
         $this->repository();
         $this->environment();
-        $this->dependencies();
+        $this->run(new Dependencies());
         $this->clear();
         $this->annotations();
         $this->database();
