@@ -74,9 +74,9 @@ class CommandsRunner
 
         // Run process
         $output = '';
-        $process->run(function ($type, $buffer) use (&$output) {
-            $output .= $buffer;
-        });
+        //$process->run(function ($type, $buffer) use (&$output) {
+        //    $output .= $buffer;
+        //});
 
         // Wait for process
         while ($process->isRunning()) {
