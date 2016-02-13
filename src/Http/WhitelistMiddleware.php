@@ -19,7 +19,7 @@ class WhitelistMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!$this->isAllowedIp($request)) {
-            throw new AuthorizationException();
+            throw new AuthorizationException('Invalid IP '.$request->ip());
         }
 
         return $next($request);
@@ -33,10 +33,7 @@ class WhitelistMiddleware
     protected function isAllowedIp(Request $request)
     {
         // Get allowed IPs
-        $allowed = env('DEPLOY_IPS');
-        $allowed = (array) explode(',', $allowed);
-        $allowed[] = '127.0.0.1';
-
+        $allowed = config('deploy.allowed_ips');
         $isAllowed = in_array($request->ip(), $allowed, true);
 
         return $isAllowed;

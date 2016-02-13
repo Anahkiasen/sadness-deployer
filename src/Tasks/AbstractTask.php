@@ -48,7 +48,7 @@ abstract class AbstractTask
             if ($command instanceof Command) {
                 continue;
             }
-            
+
             $command = new Command([
                 'command' => $command,
                 'status' => null,
