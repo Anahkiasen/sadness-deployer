@@ -15,6 +15,18 @@ class SadnessDeployerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->loadViewsFrom(__DIR__.'/../views', 'sadness-deployer');
+        $this->publishes([
+            __DIR__.'/../config/deploy.php' => config_path('deploy.php'),
+        ]);
+
+        $this->app->bind(Deployer::class, function ($app) {
+            $branch   = $app['config']->get('deploy.scm.branch', 'master');
+
+            $deployer = new Deployer(new CommandsRunner());
+            $deployer->setBranch($branch);
+
+            return $deployer;
+        });
     }
 
     public function boot()

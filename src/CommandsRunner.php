@@ -67,7 +67,7 @@ class CommandsRunner
     {
         foreach ($commands as $command) {
             $process = $this->run($command);
-            if (!$process->status) {
+            if (!$process->status && !$this->pretend) {
                 break;
             }
         }

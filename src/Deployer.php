@@ -12,6 +12,11 @@ class Deployer
     protected $runner;
 
     /**
+     * @var string
+     */
+    protected $branch;
+
+    /**
      * @param CommandsRunner $runner
      */
     public function __construct(CommandsRunner $runner)
@@ -19,6 +24,18 @@ class Deployer
         $this->runner = $runner;
         $this->runner->setBasePath(base_path());
     }
+
+    /**
+     * @param string $branch
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    ////////////////////////////// OPTIONS ///////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 
     /**
      * @param boolean $pretend
@@ -76,6 +93,7 @@ class Deployer
     protected function repository()
     {
         $this->run([
+            'git checkout '.$this->branch,
             'git reset --hard',
             'git clean -df',
             'git pull',
@@ -84,14 +102,14 @@ class Deployer
 
     /**
      * Copy environment file.
-     *
-     * @param string $from
      */
-    protected function environment($from = 'production')
+    protected function environment()
     {
+        $environment = env('APP_ENV', 'production');
+
         $this->run([
             'rm .env',
-            'cp .env.'.$from.' .env',
+            'cp .env.'.$environment.' .env',
         ]);
     }
 
