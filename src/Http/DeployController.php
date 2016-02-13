@@ -59,6 +59,9 @@ class DeployController extends Controller
         // Retrieve command
         $commands = $batches->get($hash);
         $command = Arr::get($commands, $command);
+        if (!$command) {
+            throw new InvalidArgumentException;
+        }
 
         // Set pretend mode
         $pretend = $request->get('pretend');

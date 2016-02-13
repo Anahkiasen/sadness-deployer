@@ -42,8 +42,13 @@ class BatchManager
     public function get($hash)
     {
         $filename = $this->folder.'/'.$hash;
-        $contents = file_get_contents($filename);
+        if (!file_exists($filename)) {
+            return [];
+        }
 
-        return unserialize($contents);
+        $contents = file_get_contents($filename);
+        $contents = unserialize($contents);
+
+        return $contents;
     }
 }
