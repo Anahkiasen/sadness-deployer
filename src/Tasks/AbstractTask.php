@@ -90,7 +90,6 @@ abstract class AbstractTask
         }
 
         $this->run([
-            'rm .env',
             'cp '.$file.' .env',
         ]);
     }
