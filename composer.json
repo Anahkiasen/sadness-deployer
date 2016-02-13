@@ -1,0 +1,14 @@
+{
+    "name": "anahkiasen/sadness-deployer",
+    "require": {
+        "symfony/process": "^3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maxime Fabre",
+            "email": "ehtnam6@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
