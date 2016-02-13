@@ -17,25 +17,33 @@
             padding: 0;
         }
 
-        .command {
+        .task {
+            opacity: 0.5;
+        }
+
+        .task.done {
+            opacity: 1;
+        }
+
+        .task__command {
             color: white;
             font-weight: bold;
             margin-bottom: 0.25em;
         }
 
-        .command small {
+        .task__command small {
             color: #666;
         }
 
-        .output {
+        .task__output {
             margin-bottom: 1em;
         }
 
-        .output.success {
+        .task__output.success {
             color: #69F0AE;
         }
 
-        .output.error {
+        .task__output.error {
             color: #FF5252;
         }
     </style>
@@ -43,13 +51,13 @@
 <body>
     {% raw %}
         <main>
-            <div v-for="task in tasks" v-if="task.status">
-                <p class="command">
-                    $ {{ item.command }}
-                    <small v-if="item.command != item.sanitized">{{ item.sanitized }}</small>
+            <div class="task" v-for="task in tasks" v-bind:class="{done: task.done}">
+                <p class="task__command">
+                    $ {{ task.command }}
+                    <small v-if="task.command != task.sanitized">{{ task.sanitized }}</small>
                 </p>
-                <p class="output success" v-if="item.status">{{ item.output }}</p>
-                <p class="output error" v-if="!item.status">{{ item.output }}</p>
+                <p class="task__output success" v-if="task.status">{{ task.output }}</p>
+                <p class="task__output error" v-if="!task.status">{{ task.output }}</p>
             </div>
         </main>
     {% endraw %}
@@ -60,16 +68,28 @@
         var app = new Vue({
             el:      'main',
             data:    {
+                taskKey: 0,
                 tasks: {{ tasks|json_encode|raw }}
             },
             created: function () {
-                var that = this;
-                this.tasks.forEach(function (task, key) {
-                    var url = '/deploy/run/deploy/' +key;
-                    that.$http({url: url}).then(function (response) {
-                        that.tasks[key] = response[0];
+                this.runTask();
+            },
+            methods: {
+                runTask() {
+                    var url = '/deploy/run/deploy/' + this.taskKey + window.location.search;
+                    this.$http({url: url}).then(function (response) {
+                        var task = response.data[0];
+                        task.done = true;
+
+                        this.tasks.$set(this.taskKey, task);
+                        this.$set('taskKey', this.taskKey + 1);
+                        if (this.taskKey < this.tasks.length) {
+                            this.runTask();
+                        }
+                    }).error(function (r) {
+                        console.log(r);
                     });
-                });
+                },
             },
         });
     </script>

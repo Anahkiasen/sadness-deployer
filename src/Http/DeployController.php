@@ -23,12 +23,11 @@ class DeployController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $task
+     * @param string $task
      *
      * @return View
      */
-    public function index(Request $request, $task = 'deploy')
+    public function index($task = 'deploy')
     {
         $this->deployer->setPretend(true);
 
@@ -46,12 +45,14 @@ class DeployController extends Controller
      */
     public function run(Request $request, $task, $command)
     {
-        $this->deployer->setPretend($request->get('pretend'));
+        $pretend = $request->get('pretend');
+        $pretend = is_null($pretend) ? false : $pretend;
+        $this->deployer->setPretend($pretend);
 
         // Retrieve the command in particular
-        $tasks   = $this->deployer->$task();
+        $tasks = $this->deployer->$task();
         $command = $tasks[$command];
 
-        return $this->deployer->run($command->sanitized);
+        return $this->deployer->run($command->command);
     }
 }
