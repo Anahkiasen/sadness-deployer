@@ -94,7 +94,7 @@ class Deployer
 
         $this->runner->runCommands([
             'composer self-update',
-            'composer update --no-scripts',
+            'composer update --no-scripts --no-dev',
         ]);
     }
 
