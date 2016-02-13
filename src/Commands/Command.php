@@ -23,9 +23,9 @@ class Command extends Fluent
         if (is_string($attributes)) {
             $attributes = [
                 'command' => $attributes,
-                'status'  => null,
-                'output'  => null,
-                'done'    => false,
+                'status' => null,
+                'output' => null,
+                'done' => false,
             ];
         }
 

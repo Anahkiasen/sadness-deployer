@@ -40,16 +40,16 @@ class DeployController extends Controller
      */
     public function index(BatchManager $batches, Request $request, $task = 'deploy')
     {
-        $task     = $this->getTask($task);
-        $method   = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
+        $task = $this->getTask($task);
+        $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
         $commands = $this->deployer->$method($task);
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
-        
+
         return view('sadness-deployer::console', [
             'tasks' => $commands,
-            'hash'  => $hash,
+            'hash' => $hash,
         ]);
     }
 
@@ -65,9 +65,9 @@ class DeployController extends Controller
     {
         // Retrieve command
         $commands = $batches->get($hash);
-        $command  = Arr::get($commands, $command);
+        $command = Arr::get($commands, $command);
         if (!$command) {
-            throw new InvalidArgumentException;
+            throw new InvalidArgumentException();
         }
 
         return $this->deployer->runCommand($command);
