@@ -90,6 +90,10 @@
                         this.$set('taskKey', this.taskKey + 1);
                         if (this.taskKey < this.tasks.length) {
                             this.runTask();
+                        } else {
+                            this.$set('tasks', this.tasks.filter(function (task) {
+                                return task.done;
+                            }));
                         }
                     });
                 },
