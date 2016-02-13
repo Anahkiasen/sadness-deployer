@@ -23,7 +23,7 @@ class CommandsRunner
     protected $basePath;
 
     /**
-     * @param boolean $pretend
+     * @param bool $pretend
      */
     public function setPretend($pretend)
     {

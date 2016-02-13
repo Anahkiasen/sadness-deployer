@@ -44,7 +44,7 @@ class DeployController extends Controller
 
     /**
      * @param Request $request
-     * @param string        $task
+     * @param string  $task
      *
      * @return View
      */

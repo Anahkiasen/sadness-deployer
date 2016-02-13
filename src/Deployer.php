@@ -4,8 +4,6 @@ namespace SadnessDeployer;
 
 use Closure;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Fluent;
 
 class Deployer
 {
@@ -51,7 +49,7 @@ class Deployer
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * @param boolean $pretend
+     * @param bool $pretend
      */
     public function setPretend($pretend)
     {
@@ -63,7 +61,7 @@ class Deployer
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * Setup the application and Deployer
+     * Setup the application and Deployer.
      */
     public function setup()
     {
@@ -134,10 +132,14 @@ class Deployer
     protected function environment()
     {
         $environment = env('APP_ENV', 'production');
+        $file = '.env.'.$environment;
+        if (!file_exists($this->runner->getBasePath().'/'.$file)) {
+            $file = '.env.example';
+        }
 
         $this->run([
             'rm .env',
-            'cp .env.'.$environment.' .env',
+            'cp '.$file.' .env',
         ]);
     }
 
