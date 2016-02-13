@@ -72,7 +72,7 @@ class Deployer
             'git remote add origin '.$this->option('scm.url'),
         ]);
 
-        $this->deploy();
+        return $this->deploy();
     }
 
     /**
