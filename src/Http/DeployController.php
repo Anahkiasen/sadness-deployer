@@ -22,12 +22,22 @@ class DeployController extends Controller
     }
 
     /**
-     * @Get("deploy", as="deploy.deploy")
-     *
      * @return View
      */
     public function index()
     {
+        return view('sadness-deployer::console', [
+            'output' => $this->deployer->deploy(),
+        ]);
+    }
+
+    /**
+     * @return View
+     */
+    public function pretend()
+    {
+        $this->deployer->setPretend(true);
+
         return view('sadness-deployer::console', [
             'output' => $this->deployer->deploy(),
         ]);

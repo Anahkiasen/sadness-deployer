@@ -13,9 +13,22 @@ class CommandsRunner
     protected $output = [];
 
     /**
+     * @var bool
+     */
+    protected $pretend = false;
+
+    /**
      * @var string
      */
     protected $basePath;
+
+    /**
+     * @param boolean $pretend
+     */
+    public function setPretend($pretend)
+    {
+        $this->pretend = $pretend;
+    }
 
     /**
      * @return string
@@ -75,9 +88,11 @@ class CommandsRunner
 
         // Run process
         $output = '';
-        //$process->run(function ($type, $buffer) use (&$output) {
-        //    $output .= $buffer;
-        //});
+        if (!$this->pretend) {
+            $process->run(function ($type, $buffer) use (&$output) {
+                $output .= $buffer;
+            });
+        }
 
         // Wait for process
         while ($process->isRunning()) {

@@ -21,6 +21,18 @@ class Deployer
     }
 
     /**
+     * @param boolean $pretend
+     */
+    public function setPretend($pretend)
+    {
+        $this->runner->setPretend($pretend);
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    /////////////////////////////// DEPLOY ///////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+
+    /**
      * Deploy the application.
      *
      * @param Closure|null $callback
@@ -63,7 +75,7 @@ class Deployer
      */
     protected function repository()
     {
-        $this->runner->runCommands([
+        $this->run([
             'git reset --hard',
             'git clean -df',
             'git pull',
@@ -77,7 +89,7 @@ class Deployer
      */
     protected function environment($from = 'production')
     {
-        $this->runner->runCommands([
+        $this->run([
             'rm .env',
             'cp .env.'.$from.' .env',
         ]);
@@ -92,7 +104,7 @@ class Deployer
             $this->getComposer();
         }
 
-        $this->runner->runCommands([
+        $this->run([
             'composer self-update',
             'composer update --no-scripts --no-dev',
         ]);
@@ -103,7 +115,7 @@ class Deployer
      */
     protected function clear()
     {
-        $this->runner->runCommands([
+        $this->run([
             'artisan cache:clear',
             'artisan config:clear',
             'artisan route:clear',
@@ -116,7 +128,7 @@ class Deployer
      */
     protected function annotations()
     {
-        $this->runner->runCommands([
+        $this->run([
             'artisan route:scan',
             'artisan model:scan',
         ]);
@@ -127,7 +139,7 @@ class Deployer
      */
     protected function optimize()
     {
-        $this->runner->runCommands([
+        $this->run([
             'artisan config:cache',
             'artisan route:cache',
             'artisan config:cache',
@@ -140,7 +152,7 @@ class Deployer
      */
     protected function database()
     {
-        $this->runner->runCommands([
+        $this->run([
             'artisan migrate --force',
             'artisan db:backup',
         ]);
@@ -155,7 +167,7 @@ class Deployer
      */
     private function getComposer()
     {
-        $this->runner->runCommands([
+        $this->run([
             'php -r "readfile(\'https://getcomposer.org/installer\');" > composer-setup.php',
             'php composer-setup.php',
             'php -r "unlink(\'composer-setup.php\');"',

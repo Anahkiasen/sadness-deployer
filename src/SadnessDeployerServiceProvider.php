@@ -23,6 +23,7 @@ class SadnessDeployerServiceProvider extends ServiceProvider
         $router = $this->app['router'];
         $router->group(['middleware' => WhitelistMiddleware::class], function () use ($router) {
             $router->get('deploy', DeployController::class.'@index');
+            $router->get('deploy/pretend', DeployController::class.'@pretend');
         });
     }
 }
