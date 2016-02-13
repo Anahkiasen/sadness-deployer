@@ -15,7 +15,7 @@ class Dependencies extends AbstractTask
 
         $this->run([
             'composer self-update',
-            'composer update --no-interaction --no-scripts '.$flags,
+            'composer install --no-interaction --no-scripts '.$flags,
         ]);
     }
 
