@@ -15,8 +15,8 @@ class Deploy extends AbstractTask
         $this->dependencies();
         $this->clear();
         $this->annotations();
-        $this->optimize();
         $this->database();
         $this->run('artisan up');
+        $this->optimize();
     }
 }
