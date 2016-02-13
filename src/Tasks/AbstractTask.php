@@ -85,7 +85,6 @@ abstract class AbstractTask
                 $command = new Command($command);
             }
 
-            dump($command); exit;
             $queue[] = $command;
         }
 

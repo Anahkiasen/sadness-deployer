@@ -21,9 +21,14 @@ class DeployController extends Controller
     /**
      * @param TasksRunner $deployer
      */
-    public function __construct(TasksRunner $deployer)
+    public function __construct(TasksRunner $deployer, Request $request)
     {
         $this->deployer = $deployer;
+
+        // Set options
+        $pretend = $request->get('pretend');
+        $pretend = is_null($pretend) ? false : $pretend;
+        $this->deployer->setPretend($pretend);
     }
 
     /**
@@ -35,17 +40,16 @@ class DeployController extends Controller
      */
     public function index(BatchManager $batches, Request $request, $task = 'deploy')
     {
-        $task = $this->getTask($task);
-        $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
+        $task     = $this->getTask($task);
+        $method   = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
         $commands = $this->deployer->$method($task);
-        dump($commands); exit;
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
-
+        
         return view('sadness-deployer::console', [
             'tasks' => $commands,
-            'hash' => $hash,
+            'hash'  => $hash,
         ]);
     }
 
@@ -61,15 +65,10 @@ class DeployController extends Controller
     {
         // Retrieve command
         $commands = $batches->get($hash);
-        $command = Arr::get($commands, $command);
+        $command  = Arr::get($commands, $command);
         if (!$command) {
             throw new InvalidArgumentException;
         }
-
-        // Set pretend mode
-        $pretend = $request->get('pretend');
-        $pretend = is_null($pretend) ? false : $pretend;
-        $this->deployer->setPretend($pretend);
 
         return $this->deployer->runCommand($command);
     }

@@ -2,6 +2,7 @@
 
 namespace SadnessDeployer;
 
+use Illuminate\Support\Collection;
 use SadnessDeployer\Commands\Command;
 
 class BatchManager
@@ -20,12 +21,17 @@ class BatchManager
     }
 
     /**
-     * @param Command[] $commands
+     * @param Collection|Command[] $commands
      *
      * @return string
      */
-    public function set(array $commands)
+    public function set($commands)
     {
+        // Unwrap collections
+        if ($commands instanceof Collection) {
+            $commands = $commands->all();
+        }
+
         $hash = md5(serialize($commands));
         $filename = $this->folder.'/'.$hash;
 
