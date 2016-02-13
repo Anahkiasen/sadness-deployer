@@ -28,7 +28,7 @@ class DeployController extends Controller
      */
     public function index()
     {
-        return view('console', [
+        return view('sadness-deployer::console', [
             'output' => $this->deployer->deploy(),
         ]);
     }

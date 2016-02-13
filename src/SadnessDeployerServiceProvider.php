@@ -14,6 +14,7 @@ class SadnessDeployerServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->loadViewsFrom(__DIR__.'/../views', 'sadness-deployer');
     }
 
     public function boot()

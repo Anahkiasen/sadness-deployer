@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sadness Deployer</title>
+    <style>
+        body {
+            background: #263238;
+            padding: 2rem;
+            color: #eceff1;
+            font-family: Monaco, monospace;
+            font-size: 12px;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .command {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 0.25em;
+        }
+
+        .command small {
+            color: #666;
+        }
+
+        .output {
+            margin-bottom: 1em;
+        }
+
+        .output.success {
+            color: #69f0ae;
+        }
+
+        .output.error {
+            color: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    {% for command in output %}
+        <p class="command">
+            $ {{ command.command }}
+            {% if command.command != command.sanitized %}
+                <small>{{ command.sanitized }}</small>
+            {% endif %}
+        </p>
+        {% if command.status %}
+            <p class="output success">{{ command.output|nl2br }}</p>
+        {% else %}
+            <p class="output error">{{ command.output|nl2br }}</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
