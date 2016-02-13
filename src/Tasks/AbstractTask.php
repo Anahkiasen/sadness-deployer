@@ -106,7 +106,7 @@ abstract class AbstractTask
 
         $this->run([
             'composer self-update',
-            'composer update --no-scripts '.$flags,
+            'composer install --no-scripts '.$flags,
         ]);
     }
 
