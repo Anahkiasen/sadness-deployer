@@ -29,10 +29,8 @@ class DeployController extends Controller
      */
     public function index($task = 'deploy')
     {
-        $this->deployer->setPretend(true);
-
         return view('sadness-deployer::console', [
-            'tasks' => $this->deployer->$task(),
+            'tasks' => $this->getCommands($task),
         ]);
     }
 
@@ -45,14 +43,28 @@ class DeployController extends Controller
      */
     public function run(Request $request, $task, $command)
     {
+        // Retrieve the command in particular
+        $commands = $this->getCommands($task);
+        $command  = $commands[$command];
+
+        // Set pretend mode
         $pretend = $request->get('pretend');
         $pretend = is_null($pretend) ? false : $pretend;
         $this->deployer->setPretend($pretend);
 
-        // Retrieve the command in particular
-        $tasks = $this->deployer->$task();
-        $command = $tasks[$command];
-
         return $this->deployer->run($command->command);
+    }
+
+    /**
+     * @param string $task
+     *
+     * @return array
+     */
+    protected function getCommands($task)
+    {
+        $this->deployer->setPretend(true);
+        $tasks = $this->deployer->$task();
+
+        return $tasks;
     }
 }
