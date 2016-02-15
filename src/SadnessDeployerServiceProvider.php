@@ -35,7 +35,6 @@ class SadnessDeployerServiceProvider extends ServiceProvider
         $router->group(['middleware' => WhitelistMiddleware::class], function () use ($router) {
             $router->get('deploy/{task?}', DeployController::class.'@index');
             $router->get('deploy/run/{task}/{command}', DeployController::class.'@run');
-            $router->get('deploy/setup', DeployController::class.'@setup');
         });
     }
 }
