@@ -74,19 +74,19 @@ class DeployController extends Controller
     }
 
     /**
-     * @param string $task
+     * @param string $handle
      *
      * @return AbstractTask
      */
-    private function getTask($task)
+    private function getTask($handle)
     {
-        $task = sprintf('SadnessDeployer\Tasks\%s', ucfirst($task));
+        $task = sprintf('SadnessDeployer\Tasks\%s', ucfirst($handle));
         if (!class_exists($task)) {
-            $task = sprintf('SadnessDeployer\Tasks\Subtasks\%s', ucfirst($task));
+            $task = sprintf('SadnessDeployer\Tasks\Subtasks\%s', ucfirst($handle));
         }
 
         if (!class_exists($task)) {
-            throw new InvalidArgumentException('Invalid task '.$task);
+            throw new InvalidArgumentException('Invalid task '.$handle);
         }
 
         return new $task();
