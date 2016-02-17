@@ -15,7 +15,8 @@ class Dependencies extends AbstractTask
         parent::__construct($configuration);
 
         $flags = getenv('APP_DEBUG') ? '--no-dev' : '';
-        if (!file_exists(__DIR__.'/../../../composer.phar')) {
+        $folder = $this->option('paths.app');
+        if (!file_exists($folder.'/composer.phar')) {
             $this->getComposer();
         }
 
