@@ -31,9 +31,9 @@ class RoutingServiceProvider extends AbstractServiceProvider
             $routes->setStrategy($strategy);
 
             // Register routes
-            $routes->get('deployer/vendor/anahkiasen/sadness-deployer/', DeployController::class.'::index');
-            $routes->get('deployer/vendor/anahkiasen/sadness-deployer/{task}', DeployController::class.'::index');
-            $routes->get('deployer/vendor/anahkiasen/sadness-deployer/run/{task}/{command}', DeployController::class.'::run');
+            $routes->get('deployer/', DeployController::class.'::index');
+            $routes->get('deployer/{task}', DeployController::class.'::index');
+            $routes->get('deployer/run/{task}/{command}', DeployController::class.'::run');
 
             return $routes;
         });
