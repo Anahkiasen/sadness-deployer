@@ -1,11 +1,11 @@
 <?php
 
-namespace SadnessDeployer\Providers;
+namespace SadnessDeployer\Http\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Route\RouteCollection;
 use League\Route\Strategy\ParamStrategy;
-use SadnessDeployer\Http\DeployController;
+use SadnessDeployer\Http\Controllers\DeployController;
 
 class RoutingServiceProvider extends AbstractServiceProvider
 {

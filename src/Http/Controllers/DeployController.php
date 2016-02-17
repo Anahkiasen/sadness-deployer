@@ -1,19 +1,18 @@
 <?php
 
-namespace SadnessDeployer\Http;
+namespace SadnessDeployer\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use League\Plates\Engine;
+use Psr\Http\Message\ServerRequestInterface;
 use SadnessDeployer\BatchManager;
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 use SadnessDeployer\TasksRunner;
 
-class DeployController extends Controller
+class DeployController
 {
     /**
      * @var TasksRunner
@@ -31,34 +30,35 @@ class DeployController extends Controller
     private $views;
 
     /**
-     * @param Configuration $configuration
-     * @param TasksRunner   $deployer
-     * @param Engine        $views
-     * @param Request       $request
+     * @param Configuration          $configuration
+     * @param TasksRunner            $deployer
+     * @param Engine                 $views
+     * @param ServerRequestInterface $request
      */
-    public function __construct(Configuration $configuration, TasksRunner $deployer, Engine $views, Request $request)
+    public function __construct(Configuration $configuration, TasksRunner $deployer, Engine $views, ServerRequestInterface $request)
     {
         $this->configuration = $configuration;
         $this->deployer = $deployer;
         $this->views = $views;
 
         // Set options
-        $pretend = $request->get('pretend');
-        $pretend = is_null($pretend) ? false : $pretend;
+        $pretend = array_get($request->getQueryParams(), 'pretend');
+        $pretend = !is_null($pretend);
         $this->deployer->setPretend($pretend);
     }
 
     /**
-     * @param BatchManager $batches
-     * @param Request      $request
-     * @param string       $task
+     * @param BatchManager           $batches
+     * @param ServerRequestInterface $request
+     * @param string                 $task
      *
      * @return View
      */
-    public function index(BatchManager $batches, Request $request, $task = 'deploy')
+    public function index(BatchManager $batches, ServerRequestInterface $request, $task = 'deploy')
     {
         $task = $this->getTask($task);
-        $method = $request->get('sync') ? 'runTask' : 'getCommandsFrom';
+        $sync = array_get($request->getQueryParams(), 'sync');
+        $method = $sync ? 'runTask' : 'getCommandsFrom';
         $commands = $this->deployer->$method($task);
 
         // Store commands for retrieval
@@ -72,13 +72,12 @@ class DeployController extends Controller
 
     /**
      * @param BatchManager $batches
-     * @param Request      $request
      * @param string       $hash
      * @param string       $command
      *
      * @return array
      */
-    public function run(BatchManager $batches, Request $request, $hash, $command)
+    public function run(BatchManager $batches, $hash, $command)
     {
         // Retrieve command
         $commands = $batches->get($hash);

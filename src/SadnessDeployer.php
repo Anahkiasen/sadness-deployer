@@ -13,9 +13,9 @@ use Relay\MiddlewareInterface;
 use Relay\RelayBuilder;
 use SadnessDeployer\Http\Middlewares\LeagueRouteMiddleware;
 use SadnessDeployer\Http\Middlewares\WhitelistMiddleware;
-use SadnessDeployer\Providers\PlatesServiceProvider;
-use SadnessDeployer\Providers\RequestServiceProvider;
-use SadnessDeployer\Providers\RoutingServiceProvider;
+use SadnessDeployer\Http\Providers\PlatesServiceProvider;
+use SadnessDeployer\Http\Providers\RequestServiceProvider;
+use SadnessDeployer\Http\Providers\RoutingServiceProvider;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
 

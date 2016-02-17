@@ -1,9 +1,10 @@
 <?php
 
-namespace SadnessDeployer\Providers;
+namespace SadnessDeployer\Http\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use League\Plates\Engine;
+use SadnessDeployer\Configuration;
 
 class PlatesServiceProvider extends AbstractServiceProvider
 {
@@ -20,7 +21,10 @@ class PlatesServiceProvider extends AbstractServiceProvider
     public function register()
     {
         $this->container->share(Engine::class, function () {
-           return new Engine(__DIR__.'/../../views');
+            $configuration = $this->container->get(Configuration::class);
+            $folder = $configuration->get('base_path').'/views';
+
+           return new Engine($folder);
         });
     }
 }

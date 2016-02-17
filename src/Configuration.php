@@ -2,8 +2,8 @@
 
 namespace SadnessDeployer;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Illuminate\Support\Collection;
 
-class Configuration extends ParameterBag
+class Configuration extends Collection
 {
 }

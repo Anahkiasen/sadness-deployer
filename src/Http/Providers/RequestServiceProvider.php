@@ -1,6 +1,6 @@
 <?php
 
-namespace SadnessDeployer\Providers;
+namespace SadnessDeployer\Http\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Psr\Http\Message\ServerRequestInterface;
