@@ -76,7 +76,7 @@
         </div>
     </main>
     <form>
-        <input name="interactive" type="text" placeholder="composer --version" value="<?php echo $_GET['interactive'] ?>">
+        <input name="interactive" autofocus type="text" placeholder="composer --version" value="<?php echo $_GET['interactive'] ?>">
     </form>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
