@@ -56,10 +56,10 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     {
         $defaults = [
             'paths'       => [
-                'app'      => realpath(__DIR__.'/../..'),
+                'app'      => realpath(getcwd().'/..'),
                 'cache'    => realpath(__DIR__.'/../cache'),
                 'views'    => realpath(__DIR__.'/../views'),
-                'deployer' => realpath(__DIR__.'/..'),
+                'deployer' => realpath(getcwd()),
             ],
             'allowed_ips' => [
                 '127.0.0.1',
