@@ -81,7 +81,7 @@
             },
             methods: {
                 runTask() {
-                    var url = '<?php echo $url ?>/run/' + this.hash + '/' + this.taskKey + window.location.search;
+                    var url = 'index.php?/run/' + this.hash + '/' + this.taskKey + window.location.search;
                     this.$http({url: url}).then(function (response) {
                         var task = response.data;
                         task.done = true;

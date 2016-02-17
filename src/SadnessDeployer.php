@@ -54,7 +54,6 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     protected function makeConfiguration(array $configuration)
     {
         $defaults = [
-            'url'         => '/deployer',
             'paths'       => [
                 'app'      => realpath(__DIR__.'/../..'),
                 'cache'    => realpath(__DIR__.'/../cache'),
@@ -85,7 +84,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
         $container->delegate(new ReflectionContainer());
 
         $container->addServiceProvider(new RequestServiceProvider());
-        $container->addServiceProvider(new RoutingServiceProvider($this->configuration->get('url')));
+        $container->addServiceProvider(new RoutingServiceProvider());
         $container->addServiceProvider(new PlatesServiceProvider());
 
         $container->share(Configuration::class, function () {

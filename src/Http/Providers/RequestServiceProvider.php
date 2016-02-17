@@ -5,6 +5,7 @@ namespace SadnessDeployer\Http\Providers;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequestFactory;
+use Zend\Diactoros\Uri;
 
 class RequestServiceProvider extends AbstractServiceProvider
 {
@@ -23,13 +24,19 @@ class RequestServiceProvider extends AbstractServiceProvider
     public function register()
     {
         $this->container->share(ServerRequestInterface::class, function () {
-            return ServerRequestFactory::fromGlobals(
+            $request = ServerRequestFactory::fromGlobals(
                 $_SERVER,
                 $_GET,
                 $_POST,
                 $_COOKIE,
                 $_FILES
             );
+
+            // Mock internal router
+            $uri = new Uri($request->getUri()->getQuery() ?: '/');
+            $request = $request->withUri($uri);
+
+            return $request;
         });
     }
 }
