@@ -3,6 +3,7 @@
 namespace SadnessDeployer\Tasks;
 
 use SadnessDeployer\Tasks\Subtasks\Annotations;
+use SadnessDeployer\Tasks\Subtasks\Backup;
 use SadnessDeployer\Tasks\Subtasks\Clear;
 use SadnessDeployer\Tasks\Subtasks\Database;
 use SadnessDeployer\Tasks\Subtasks\Dependencies;
@@ -18,14 +19,23 @@ class Deploy extends AbstractTask
     public function __construct()
     {
         $this->run([
+            // Shut down application
             'artisan down',
+            Backup::class,
+
+            // Update state
             Repository::class,
             Environment::class,
             Dependencies::class,
             Clear::class,
             Annotations::class,
+
+            // Update database
             Database::class,
+            Backup::class,
             'artisan up',
+
+            // Optimize application
             Optimize::class,
         ]);
     }
