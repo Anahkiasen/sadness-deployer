@@ -87,7 +87,7 @@ class DeployController
             throw new InvalidArgumentException();
         }
 
-        return $this->deployer->runCommand($command);
+        return $this->deployer->runCommand($command)->toJson();
     }
 
     /**
