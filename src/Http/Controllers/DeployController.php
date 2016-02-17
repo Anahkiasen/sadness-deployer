@@ -17,7 +17,7 @@ class DeployController
     /**
      * @var TasksRunner
      */
-    protected $deployer;
+    protected $runner;
 
     /**
      * @var Configuration
@@ -31,20 +31,20 @@ class DeployController
 
     /**
      * @param Configuration          $configuration
-     * @param TasksRunner            $deployer
+     * @param TasksRunner            $runner
      * @param Engine                 $views
      * @param ServerRequestInterface $request
      */
-    public function __construct(Configuration $configuration, TasksRunner $deployer, Engine $views, ServerRequestInterface $request)
+    public function __construct(Configuration $configuration, TasksRunner $runner, Engine $views, ServerRequestInterface $request)
     {
         $this->configuration = $configuration;
-        $this->deployer = $deployer;
-        $this->views = $views;
+        $this->runner        = $runner;
+        $this->views         = $views;
 
         // Set options
         $pretend = array_get($request->getQueryParams(), 'pretend');
         $pretend = !is_null($pretend);
-        $this->deployer->setPretend($pretend);
+        $this->runner->setPretend($pretend);
     }
 
     /**
@@ -54,12 +54,12 @@ class DeployController
      *
      * @return View
      */
-    public function index(BatchManager $batches, ServerRequestInterface $request, $task = 'deploy')
+    public function index(BatchManager $batches, ServerRequestInterface $request, $task = 'custom')
     {
         $task = $this->getTask($task);
         $sync = array_get($request->getQueryParams(), 'sync');
         $method = $sync ? 'runTask' : 'getCommandsFrom';
-        $commands = $this->deployer->$method($task);
+        $commands = $this->runner->$method($task);
 
         // Store commands for retrieval
         $hash = $batches->set($commands);
@@ -87,7 +87,7 @@ class DeployController
             throw new InvalidArgumentException();
         }
 
-        return $this->deployer->runCommand($command)->toJson();
+        return $this->runner->runCommand($command)->toJson();
     }
 
     /**

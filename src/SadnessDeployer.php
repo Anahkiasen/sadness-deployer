@@ -16,6 +16,7 @@ use SadnessDeployer\Http\Middlewares\WhitelistMiddleware;
 use SadnessDeployer\Http\Providers\PlatesServiceProvider;
 use SadnessDeployer\Http\Providers\RequestServiceProvider;
 use SadnessDeployer\Http\Providers\RoutingServiceProvider;
+use SadnessDeployer\Tasks\Deploy;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
 
@@ -67,6 +68,9 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
                 'url'    => 'git@github.com:foo/bar.git',
                 'branch' => 'master',
             ],
+            'tasks' => [
+                Deploy::class,
+            ]
         ];
 
         $configuration = array_replace_recursive($defaults, $configuration);
