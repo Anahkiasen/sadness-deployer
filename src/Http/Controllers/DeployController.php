@@ -38,8 +38,8 @@ class DeployController
     public function __construct(Configuration $configuration, TasksRunner $runner, Engine $views, ServerRequestInterface $request)
     {
         $this->configuration = $configuration;
-        $this->runner        = $runner;
-        $this->views         = $views;
+        $this->runner = $runner;
+        $this->views = $views;
 
         // Set options
         $pretend = array_get($request->getQueryParams(), 'pretend');

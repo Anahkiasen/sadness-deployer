@@ -36,7 +36,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     {
         // Create configuration
         $this->configuration = $this->makeConfiguration($configuration);
-        $this->container     = $this->makeContainer();
+        $this->container = $this->makeContainer();
 
         // Load dotenv file
         try {
@@ -55,22 +55,22 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     protected function makeConfiguration(array $configuration)
     {
         $defaults = [
-            'paths'       => [
-                'app'      => realpath(getcwd().'/..'),
-                'cache'    => realpath(__DIR__.'/../cache'),
-                'views'    => realpath(__DIR__.'/../views'),
+            'paths' => [
+                'app' => realpath(getcwd().'/..'),
+                'cache' => realpath(__DIR__.'/../cache'),
+                'views' => realpath(__DIR__.'/../views'),
                 'deployer' => realpath(getcwd()),
             ],
             'allowed_ips' => [
                 '127.0.0.1',
             ],
-            'scm'         => [
-                'url'    => 'git@github.com:foo/bar.git',
+            'scm' => [
+                'url' => 'git@github.com:foo/bar.git',
                 'branch' => 'master',
             ],
             'tasks' => [
                 Deploy::class,
-            ]
+            ],
         ];
 
         $configuration = array_replace_recursive($defaults, $configuration);
@@ -104,7 +104,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     public function run()
     {
         // Create Request and Response
-        $request  = $this->container->get(ServerRequestInterface::class);
+        $request = $this->container->get(ServerRequestInterface::class);
         $response = new Response();
 
         $builder = new RelayBuilder(function ($callable) {
@@ -112,7 +112,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
         });
 
         // Apply middlewares
-        $relay    = $builder->newInstance($this->getMiddlewares());
+        $relay = $builder->newInstance($this->getMiddlewares());
         $response = $relay($request, $response);
 
         (new SapiEmitter())->emit($response);
