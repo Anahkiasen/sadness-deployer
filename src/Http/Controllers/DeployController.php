@@ -64,8 +64,9 @@ class DeployController
         // Store commands for retrieval
         $hash = $batches->set($commands);
 
-        return $this->views->render('console', [
+        return $this->views->render('index', [
             'tasks' => $commands,
+            'url' => $this->configuration->get('url'),
             'hash' => $hash,
         ]);
     }

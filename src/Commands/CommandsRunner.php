@@ -3,6 +3,7 @@
 namespace SadnessDeployer\Commands;
 
 use Illuminate\Support\Collection;
+use SadnessDeployer\Configuration;
 use Symfony\Component\Process\Process;
 
 class CommandsRunner
@@ -11,6 +12,19 @@ class CommandsRunner
      * @var bool
      */
     protected $pretend = false;
+
+    /**
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
     /**
      * @param bool $pretend
@@ -50,7 +64,7 @@ class CommandsRunner
     public function runCommand(Command $command)
     {
         // Build process
-        $process = new Process($command->sanitized, base_path());
+        $process = new Process($command->sanitized, $this->configuration->get('paths.app'));
 
         // Run process
         $output = '';

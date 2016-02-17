@@ -17,7 +17,7 @@ class BatchManager
      */
     public function __construct(Configuration $configuration)
     {
-        $this->folder = $configuration->get('base_path').'/cache/batches';
+        $this->folder = $configuration->get('paths.cache').'/batches';
     }
 
     /**

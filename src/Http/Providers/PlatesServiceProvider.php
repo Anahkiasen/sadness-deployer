@@ -22,7 +22,7 @@ class PlatesServiceProvider extends AbstractServiceProvider
     {
         $this->container->share(Engine::class, function () {
             $configuration = $this->container->get(Configuration::class);
-            $folder = $configuration->get('base_path').'/views';
+            $folder = $configuration->get('paths.views');
 
            return new Engine($folder);
         });

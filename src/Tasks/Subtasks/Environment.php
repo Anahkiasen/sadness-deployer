@@ -17,7 +17,7 @@ class Environment extends AbstractTask
         $environment = getenv('APP_ENV') ?: 'production';
         $file = '.env.'.$environment;
 
-        if (file_exists($this->option('base_path').$file)) {
+        if (file_exists($this->option('paths.deployer').$file)) {
             $this->run('cp '.$file.' .env');
         }
     }

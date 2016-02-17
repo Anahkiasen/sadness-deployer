@@ -17,6 +17,19 @@ class RoutingServiceProvider extends AbstractServiceProvider
     ];
 
     /**
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * @param string $url
+     */
+    public function __construct($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
      * Use the register method to register items with the container via the
      * protected $this->container property or the `getContainer` method
      * from the ContainerAwareTrait.
@@ -31,9 +44,9 @@ class RoutingServiceProvider extends AbstractServiceProvider
             $routes->setStrategy($strategy);
 
             // Register routes
-            $routes->get('deployer/', DeployController::class.'::index');
-            $routes->get('deployer/{task}', DeployController::class.'::index');
-            $routes->get('deployer/run/{task}/{command}', DeployController::class.'::run');
+            $routes->get($this->url.'/', DeployController::class.'::index');
+            $routes->get($this->url.'/{task}', DeployController::class.'::index');
+            $routes->get($this->url.'/run/{task}/{command}', DeployController::class.'::run');
 
             return $routes;
         });
