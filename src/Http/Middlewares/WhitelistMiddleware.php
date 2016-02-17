@@ -31,8 +31,9 @@ class WhitelistMiddleware implements MiddlewareInterface
      * @param Response                          $response The response.
      * @param callable|MiddlewareInterface|null $next     The next middleware.
      *
-     * @return Response
      * @throws AuthorizationException
+     *
+     * @return Response
      */
     public function __invoke(RequestInterface $request, Response $response, callable $next = null)
     {

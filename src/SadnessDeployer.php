@@ -1,4 +1,5 @@
 <?php
+
 namespace SadnessDeployer;
 
 use Dotenv\Dotenv;
@@ -36,12 +37,12 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
 
         // Create configuration
         $this->configuration = new Configuration(array_merge([
-            'base_path'   => realpath(__DIR__.'/..'),
+            'base_path' => realpath(__DIR__.'/..'),
             'allowed_ips' => [
                 '127.0.0.1',
             ],
-            'scm'         => [
-                'url'    => 'git@github.com:foo/bar.git',
+            'scm' => [
+                'url' => 'git@github.com:foo/bar.git',
                 'branch' => 'master',
             ],
         ], $configuration));
@@ -67,7 +68,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
         $container->addServiceProvider(new RoutingServiceProvider());
         $container->addServiceProvider(new PlatesServiceProvider());
 
-        $container->share(Configuration::class, function() {
+        $container->share(Configuration::class, function () {
             return $this->configuration;
         });
 
@@ -75,12 +76,12 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
     }
 
     /**
-     * Run the application
+     * Run the application.
      */
     public function run()
     {
         // Create Request and Response
-        $request  = $this->container->get(ServerRequestInterface::class);
+        $request = $this->container->get(ServerRequestInterface::class);
         $response = new Response();
 
         $builder = new RelayBuilder(function ($callable) {
@@ -88,7 +89,7 @@ class SadnessDeployer implements ImmutableContainerAwareInterface
         });
 
         // Apply middlewares
-        $relay    = $builder->newInstance($this->getMiddlewares());
+        $relay = $builder->newInstance($this->getMiddlewares());
         $response = $relay($request, $response);
 
         (new SapiEmitter())->emit($response);

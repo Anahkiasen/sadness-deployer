@@ -20,7 +20,7 @@ class Deploy extends AbstractTask
     public function __construct(Configuration $configuration)
     {
         parent::__construct($configuration);
-        
+
         $this->run([
             // Shut down application
             'artisan down',

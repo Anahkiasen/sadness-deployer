@@ -2,9 +2,8 @@
 
 namespace SadnessDeployer\Tasks;
 
-use SadnessDeployer\Configuration;
-use Illuminate\Support\Arr;
 use SadnessDeployer\Commands\Command;
+use SadnessDeployer\Configuration;
 
 abstract class AbstractTask
 {

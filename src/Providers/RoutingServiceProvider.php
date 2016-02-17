@@ -1,8 +1,8 @@
 <?php
+
 namespace SadnessDeployer\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use League\Route\Route;
 use League\Route\RouteCollection;
 use League\Route\Strategy\ParamStrategy;
 use SadnessDeployer\Http\DeployController;

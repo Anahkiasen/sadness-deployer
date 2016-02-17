@@ -1,10 +1,12 @@
 <?php
+
 namespace SadnessDeployer\Http\Middlewares;
 
 use League\Route\RouteCollection;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Relay\MiddlewareInterface;
+
 class LeagueRouteMiddleware implements MiddlewareInterface
 {
     /**
@@ -32,7 +34,7 @@ class LeagueRouteMiddleware implements MiddlewareInterface
     public function __invoke(Request $request, Response $response, callable $next = null)
     {
         $response = $this->routes->dispatch($request, $response);
-        
+
         return $next($request, $response);
     }
 }

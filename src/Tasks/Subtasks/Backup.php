@@ -1,4 +1,5 @@
 <?php
+
 namespace SadnessDeployer\Tasks\Subtasks;
 
 use SadnessDeployer\Configuration;
