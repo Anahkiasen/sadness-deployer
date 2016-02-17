@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use League\Plates\Engine;
 use SadnessDeployer\BatchManager;
+use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 use SadnessDeployer\TasksRunner;
 
@@ -19,11 +21,26 @@ class DeployController extends Controller
     protected $deployer;
 
     /**
-     * @param TasksRunner $deployer
+     * @var Configuration
      */
-    public function __construct(TasksRunner $deployer, Request $request)
+    private $configuration;
+
+    /**
+     * @var Engine
+     */
+    private $views;
+
+    /**
+     * @param Configuration $configuration
+     * @param TasksRunner   $deployer
+     * @param Engine        $views
+     * @param Request       $request
+     */
+    public function __construct(Configuration $configuration, TasksRunner $deployer, Engine $views, Request $request)
     {
+        $this->configuration = $configuration;
         $this->deployer = $deployer;
+        $this->views = $views;
 
         // Set options
         $pretend = $request->get('pretend');
@@ -47,7 +64,7 @@ class DeployController extends Controller
         // Store commands for retrieval
         $hash = $batches->set($commands);
 
-        return view('sadness-deployer::console', [
+        return $this->views->render('console', [
             'tasks' => $commands,
             'hash' => $hash,
         ]);
@@ -90,8 +107,7 @@ class DeployController extends Controller
         }
 
         /** @var AbstractTask $task */
-        $task = new $task();
-        $task->setConfiguration(config('deploy'));
+        $task = new $task($this->configuration);
 
         return $task;
     }

@@ -42,9 +42,10 @@ class Command extends Fluent
     protected function sanitizeCommand($command)
     {
         $php = (new PhpExecutableFinder())->find(false);
+        $storagePath = __DIR__.'/../../cache/composer';
 
         $command = is_array($command) ? implode(' ', $command) : $command;
-        $command = str_replace('composer ', 'COMPOSER_HOME='.storage_path('composer').' php composer.phar ', $command);
+        $command = str_replace('composer ', 'COMPOSER_HOME='.$storagePath.' php composer.phar ', $command);
         $command = str_replace('artisan ', 'php artisan ', $command);
         $command = str_replace('php ', $php.' ', $command);
 

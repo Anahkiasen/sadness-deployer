@@ -2,6 +2,7 @@
 
 namespace SadnessDeployer\Tasks;
 
+use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\Subtasks\Annotations;
 use SadnessDeployer\Tasks\Subtasks\Backup;
 use SadnessDeployer\Tasks\Subtasks\Clear;
@@ -16,8 +17,10 @@ class Deploy extends AbstractTask
     /**
      * {@inheritdoc}
      */
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
+        parent::__construct($configuration);
+        
         $this->run([
             // Shut down application
             'artisan down',

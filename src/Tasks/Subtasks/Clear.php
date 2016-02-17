@@ -2,15 +2,18 @@
 
 namespace SadnessDeployer\Tasks\Subtasks;
 
+use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
 class Clear extends AbstractTask
 {
     /**
-     * Clear constructor.
+     * {@inheritdoc}
      */
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
+        parent::__construct($configuration);
+
         $this->run([
             'artisan clear-compiled',
             'artisan cache:clear',

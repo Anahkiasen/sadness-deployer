@@ -57,8 +57,6 @@ class TasksRunner
      */
     public function getCommandsFrom(AbstractTask $task)
     {
-        $task->setConfiguration($this->configuration);
-
         return $task->getCommands();
     }
 

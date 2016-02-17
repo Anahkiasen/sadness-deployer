@@ -49,18 +49,16 @@
     </style>
 </head>
 <body>
-    {% raw %}
-        <main>
-            <div class="task" v-for="task in tasks" v-bind:class="{done: task.done}">
-                <p class="task__command">
-                    $ {{ task.command }}
-                    <small v-if="task.command != task.sanitized">{{ task.sanitized }}</small>
-                </p>
-                <p class="task__output success" v-if="task.status">{{{ task.output|nl2br }}}</p>
-                <p class="task__output error" v-if="!task.status">{{{ task.output|nl2br }}}</p>
-            </div>
-        </main>
-    {% endraw %}
+    <main>
+        <div class="task" v-for="task in tasks" v-bind:class="{done: task.done}">
+            <p class="task__command">
+                $ {{ task.command }}
+                <small v-if="task.command != task.sanitized">{{ task.sanitized }}</small>
+            </p>
+            <p class="task__output success" v-if="task.status">{{{ task.output|nl2br }}}</p>
+            <p class="task__output error" v-if="!task.status">{{{ task.output|nl2br }}}</p>
+        </div>
+    </main>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
@@ -68,9 +66,9 @@
         var app = new Vue({
             el:      'main',
             data:    {
-                hash: {{ hash|json_encode|raw }},
+                hash: <?php echo json_encode($hash) ?>,
                 taskKey: 0,
-                tasks: {{ tasks|json_encode|raw }}
+                tasks: <?php echo json_encode($tasks) ?>,
             },
             created: function () {
                 this.runTask();

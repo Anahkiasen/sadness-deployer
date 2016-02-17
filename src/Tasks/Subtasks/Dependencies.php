@@ -2,17 +2,20 @@
 
 namespace SadnessDeployer\Tasks\Subtasks;
 
+use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
 class Dependencies extends AbstractTask
 {
     /**
-     * Dependencies constructor.
+     * {@inheritdoc}
      */
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
-        $flags = env('APP_DEBUG') ? '--no-dev' : '';
-        if (!file_exists(base_path('composer.phar'))) {
+        parent::__construct($configuration);
+
+        $flags = getenv('APP_DEBUG') ? '--no-dev' : '';
+        if (!file_exists(__DIR__.'/../../../composer.phar')) {
             $this->getComposer();
         }
 

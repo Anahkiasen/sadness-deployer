@@ -2,6 +2,7 @@
 
 namespace SadnessDeployer\Tasks;
 
+use SadnessDeployer\Configuration;
 use Illuminate\Support\Arr;
 use SadnessDeployer\Commands\Command;
 
@@ -18,9 +19,9 @@ abstract class AbstractTask
     protected $configuration = [];
 
     /**
-     * @param array $configuration
+     * @param Configuration $configuration
      */
-    public function setConfiguration($configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -50,7 +51,7 @@ abstract class AbstractTask
      */
     protected function option($option)
     {
-        return Arr::get($this->configuration, $option);
+        return $this->configuration->get($option);
     }
 
     //////////////////////////////////////////////////////////////////////
@@ -74,8 +75,7 @@ abstract class AbstractTask
             // command, create instance if so
             if (is_string($command) && class_exists($command)) {
                 /** @var AbstractTask $command */
-                $command = new $command();
-                $command->setConfiguration($this->configuration);
+                $command = new $command($this->configuration);
                 if ($command instanceof self) {
                     $queue = array_merge($queue, $command->getCommands());
                     continue;

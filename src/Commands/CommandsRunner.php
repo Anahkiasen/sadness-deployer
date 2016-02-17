@@ -55,9 +55,9 @@ class CommandsRunner
         // Run process
         $output = '';
         if (!$this->pretend) {
-            $process->run(function ($type, $buffer) use (&$output) {
-                $output .= $buffer;
-            });
+            //$process->run(function ($type, $buffer) use (&$output) {
+            //    $output .= $buffer;
+            //});
         }
 
         // Wait for process

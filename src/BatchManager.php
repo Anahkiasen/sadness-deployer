@@ -13,11 +13,11 @@ class BatchManager
     protected $folder;
 
     /**
-     * BatchManager constructor.
+     * @param Configuration $configuration
      */
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
-        $this->folder = __DIR__.'/../batches';
+        $this->folder = $configuration->get('base_path').'/cache/batches';
     }
 
     /**
