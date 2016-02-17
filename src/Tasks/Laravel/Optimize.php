@@ -1,11 +1,11 @@
 <?php
 
-namespace SadnessDeployer\Tasks\Subtasks;
+namespace SadnessDeployer\Tasks\Laravel;
 
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
-class Backup extends AbstractTask
+class Optimize extends AbstractTask
 {
     /**
      * {@inheritdoc}
@@ -14,6 +14,10 @@ class Backup extends AbstractTask
     {
         parent::__construct($configuration);
 
-        $this->run('artisan db:backup');
+        $this->run([
+            'artisan config:cache',
+            'artisan route:cache',
+            'artisan optimize',
+        ]);
     }
 }

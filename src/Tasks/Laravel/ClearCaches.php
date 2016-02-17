@@ -1,11 +1,11 @@
 <?php
 
-namespace SadnessDeployer\Tasks\Subtasks;
+namespace SadnessDeployer\Tasks\Laravel;
 
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
-class Optimize extends AbstractTask
+class ClearCaches extends AbstractTask
 {
     /**
      * {@inheritdoc}
@@ -15,9 +15,11 @@ class Optimize extends AbstractTask
         parent::__construct($configuration);
 
         $this->run([
-            'artisan config:cache',
-            'artisan route:cache',
-            'artisan optimize',
+            'artisan clear-compiled',
+            'artisan cache:clear',
+            'artisan config:clear',
+            'artisan route:clear',
+            'artisan twig:clean',
         ]);
     }
 }

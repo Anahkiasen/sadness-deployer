@@ -1,11 +1,11 @@
 <?php
 
-namespace SadnessDeployer\Tasks\Subtasks;
+namespace SadnessDeployer\Tasks\Laravel;
 
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
-class Clear extends AbstractTask
+class Annotations extends AbstractTask
 {
     /**
      * {@inheritdoc}
@@ -15,11 +15,8 @@ class Clear extends AbstractTask
         parent::__construct($configuration);
 
         $this->run([
-            'artisan clear-compiled',
-            'artisan cache:clear',
-            'artisan config:clear',
-            'artisan route:clear',
-            'artisan twig:clean',
+            'artisan route:scan',
+            'artisan model:scan',
         ]);
     }
 }

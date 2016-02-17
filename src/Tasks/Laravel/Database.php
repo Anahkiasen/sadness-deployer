@@ -1,11 +1,11 @@
 <?php
 
-namespace SadnessDeployer\Tasks\Subtasks;
+namespace SadnessDeployer\Tasks\Laravel;
 
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
 
-class Annotations extends AbstractTask
+class Database extends AbstractTask
 {
     /**
      * {@inheritdoc}
@@ -14,9 +14,6 @@ class Annotations extends AbstractTask
     {
         parent::__construct($configuration);
 
-        $this->run([
-            'artisan route:scan',
-            'artisan model:scan',
-        ]);
+        $this->run('artisan migrate --force');
     }
 }

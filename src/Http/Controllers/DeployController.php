@@ -112,9 +112,18 @@ class DeployController
      */
     private function getTask($handle)
     {
-        $task = sprintf('SadnessDeployer\Tasks\%s', ucfirst($handle));
-        if (!class_exists($task)) {
-            $task = sprintf('SadnessDeployer\Tasks\Subtasks\%s', ucfirst($handle));
+        $task = $handle;
+        $locations = [
+            'SadnessDeployer\Tasks\%s',
+            'SadnessDeployer\Tasks\Laravel\%s',
+            'SadnessDeployer\Tasks\Subtasks\%s',
+        ];
+
+        foreach ($locations as $location) {
+            $task = sprintf($location, ucfirst($handle));
+            if (class_exists($task)) {
+                break;
+            }
         }
 
         if (!class_exists($task)) {

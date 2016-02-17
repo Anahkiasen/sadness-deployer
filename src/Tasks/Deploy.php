@@ -3,13 +3,13 @@
 namespace SadnessDeployer\Tasks;
 
 use SadnessDeployer\Configuration;
-use SadnessDeployer\Tasks\Subtasks\Annotations;
-use SadnessDeployer\Tasks\Subtasks\Backup;
-use SadnessDeployer\Tasks\Subtasks\Clear;
-use SadnessDeployer\Tasks\Subtasks\Database;
+use SadnessDeployer\Tasks\Laravel\Annotations;
+use SadnessDeployer\Tasks\Laravel\Backup;
+use SadnessDeployer\Tasks\Laravel\ClearCaches;
+use SadnessDeployer\Tasks\Laravel\Database;
+use SadnessDeployer\Tasks\Laravel\Optimize;
 use SadnessDeployer\Tasks\Subtasks\Dependencies;
 use SadnessDeployer\Tasks\Subtasks\Environment;
-use SadnessDeployer\Tasks\Subtasks\Optimize;
 use SadnessDeployer\Tasks\Subtasks\Repository;
 
 class Deploy extends AbstractTask
@@ -30,7 +30,7 @@ class Deploy extends AbstractTask
             Repository::class,
             Environment::class,
             Dependencies::class,
-            Clear::class,
+            ClearCaches::class,
             Annotations::class,
 
             // Update database
