@@ -89,6 +89,10 @@ class DeployController extends Controller
             throw new InvalidArgumentException('Invalid task '.$handle);
         }
 
-        return new $task(config('deploy'));
+        /** @var AbstractTask $task */
+        $task = new $task();
+        $task->setConfiguration(config('deploy'));
+
+        return $task;
     }
 }

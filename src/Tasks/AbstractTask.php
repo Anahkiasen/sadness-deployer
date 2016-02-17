@@ -73,7 +73,9 @@ abstract class AbstractTask
             // Check if it's a class or a bash
             // command, create instance if so
             if (is_string($command) && class_exists($command)) {
-                $command = new $command($this->configuration);
+                /** @var AbstractTask $command */
+                $command = new $command();
+                $command->setConfiguration($this->configuration);
                 if ($command instanceof self) {
                     $queue = array_merge($queue, $command->getCommands());
                     continue;
