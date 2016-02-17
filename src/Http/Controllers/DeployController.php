@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use SadnessDeployer\BatchManager;
 use SadnessDeployer\Configuration;
 use SadnessDeployer\Tasks\AbstractTask;
+use SadnessDeployer\Tasks\Custom;
 use SadnessDeployer\TasksRunner;
 
 class DeployController
@@ -35,8 +36,12 @@ class DeployController
      * @param Engine                 $views
      * @param ServerRequestInterface $request
      */
-    public function __construct(Configuration $configuration, TasksRunner $runner, Engine $views, ServerRequestInterface $request)
-    {
+    public function __construct(
+        Configuration $configuration,
+        TasksRunner $runner,
+        Engine $views,
+        ServerRequestInterface $request
+    ) {
         $this->configuration = $configuration;
         $this->runner = $runner;
         $this->views = $views;
@@ -56,8 +61,14 @@ class DeployController
      */
     public function index(BatchManager $batches, ServerRequestInterface $request, $task = 'custom')
     {
+        // Interactive mode
+        $query = $request->getQueryParams();
+        if (array_key_exists('interactive', $query)) {
+            $this->configuration['tasks'] = $query['interactive'];
+        }
+
         $task = $this->getTask($task);
-        $sync = array_get($request->getQueryParams(), 'sync');
+        $sync = array_get($query, 'sync');
         $method = $sync ? 'runTask' : 'getCommandsFrom';
         $commands = $this->runner->$method($task);
 
@@ -66,8 +77,8 @@ class DeployController
 
         return $this->views->render('index', [
             'tasks' => $commands,
-            'url' => $this->configuration->get('url'),
             'hash' => $hash,
+            'url' => $this->configuration->get('url'),
         ]);
     }
 
@@ -89,6 +100,10 @@ class DeployController
 
         return $this->runner->runCommand($command)->toJson();
     }
+
+    //////////////////////////////////////////////////////////////////////
+    ////////////////////////////// HELPERS ///////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 
     /**
      * @param string $handle

@@ -7,6 +7,9 @@
         body {
             background: #263238;
             padding: 2rem;
+        }
+
+        body, input {
             color: #ECEFF1;
             font-family: Monaco, monospace;
             font-size: 12px;
@@ -46,6 +49,19 @@
         .task__output.error {
             color: #FF5252;
         }
+
+        input {
+            background: hsl(200, 19%, 14%);
+            padding: 1rem;
+            border: none;
+            width: 100%;
+            transition: 0.3s all;
+        }
+
+        input:focus {
+            background: hsl(200, 19%, 10%);
+            outline: 0;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +75,9 @@
             <p class="task__output error" v-if="!task.status">{{{ task.output|nl2br }}}</p>
         </div>
     </main>
+    <form>
+        <input name="interactive" type="text" placeholder="composer --version">
+    </form>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>

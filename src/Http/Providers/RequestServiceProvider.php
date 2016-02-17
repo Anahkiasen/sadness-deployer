@@ -33,7 +33,11 @@ class RequestServiceProvider extends AbstractServiceProvider
             );
 
             // Mock internal router
-            $uri = new Uri($request->getUri()->getQuery() ?: '/');
+            $uri = $request->getUri()->getQuery();
+            $uri = str_replace('interactive', '/?interactive', $uri);
+            $uri = '/'.trim($uri, '/');
+
+            $uri = new Uri($uri);
             $request = $request->withUri($uri);
 
             return $request;
