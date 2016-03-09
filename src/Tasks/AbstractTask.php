@@ -44,6 +44,16 @@ abstract class AbstractTask
     }
 
     /**
+     * @param string|array|AbstractTask $commands
+     */
+    protected function runBefore($commands)
+    {
+        $commands = $this->processCommands($commands);
+
+        $this->commands = array_merge($commands, $this->commands);
+    }
+
+    /**
      * @param string $option
      *
      * @return mixed

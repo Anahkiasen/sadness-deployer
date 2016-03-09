@@ -13,7 +13,7 @@ class Setup extends Deploy
     {
         parent::__construct($configuration);
 
-        $this->run([
+        $this->runBefore([
             'git init',
             'git remote add origin '.$this->option('scm.url'),
             'git fetch -pt',
