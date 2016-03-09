@@ -16,9 +16,8 @@ class Setup extends Deploy
         $this->runBefore([
             'git init',
             'git remote add origin '.$this->option('scm.url'),
-            'git fetch -pt',
-            'git clean -df',
-            'git checkout '.$this->option('scm.branch'),
+            'git fetch --all',
+            'git checkout '.$this->option('scm.branch'). ' --force',
         ]);
     }
 }
