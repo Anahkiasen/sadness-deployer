@@ -20,7 +20,5 @@ class Setup extends Deploy
             'git clean -df',
             'git checkout '.$this->option('scm.branch'),
         ]);
-
-        parent::__construct();
     }
 }
