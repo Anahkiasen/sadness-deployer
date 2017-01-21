@@ -83,8 +83,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
     <script>
         var app = new Vue({
-            el:      'main',
-            data:    {
+            el: 'main',
+            data: {
                 hash: <?php echo json_encode($hash) ?>,
                 taskKey: 0,
                 tasks: <?php echo json_encode($tasks) ?>,
@@ -94,8 +94,7 @@
             },
             filters: {
                 nl2br: function (value) {
-                    return ('' + value)
-                        .replace(/\n/g, '<br />');
+                    return ('' + value).replace(/\n/g, '<br />');
                 },
             },
             methods: {

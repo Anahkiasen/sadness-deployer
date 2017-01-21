@@ -31,7 +31,6 @@ class Deploy extends AbstractTask
             Environment::class,
             Dependencies::class,
             ClearCaches::class,
-            Annotations::class,
 
             // Update database
             Database::class,
