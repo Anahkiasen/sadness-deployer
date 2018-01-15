@@ -65,6 +65,8 @@ class CommandsRunner
     {
         // Build process
         $process = new Process($command->sanitized, $this->configuration->get('paths.app'));
+        $process->setTimeout(0.0);
+        $process->setIdleTimeout(0.0);
 
         // Run process
         $output = '';
